@@ -93,7 +93,14 @@
     let nextRound;
     let signature;
     do {
-      nextRound = shuffle(quizPool).slice(0, questionsPerRound).map((question) => ({...question, answers:shuffle([question.correct, ...question.wrong])}));
+      const groups = [...new Set(quizPool.map((question) => question.group))];
+      const requiredQuestions = groups.map((group) => shuffle(quizPool.filter((question) => question.group === group))[0]);
+      const remainingQuestions = quizPool.filter((question) => !requiredQuestions.includes(question));
+      const selectedQuestions = shuffle([
+        ...requiredQuestions,
+        ...shuffle(remainingQuestions).slice(0, questionsPerRound - requiredQuestions.length)
+      ]);
+      nextRound = selectedQuestions.map((question) => ({...question, answers:shuffle([question.correct, ...question.wrong])}));
       signature = nextRound.map((question) => `${question.id}:${question.answers.join('|')}`).join('~');
     } while (signature === lastRoundSignature);
     lastRoundSignature = signature;
@@ -177,7 +184,7 @@
         <div class="quiz-welcome">
           <span class="quiz-label">QUIZ ABC · {questionsPerRound} PYTAŃ</span>
           <div class="quiz-big-number">{questionsPerRound}<span>×</span></div>
-          <p>Pytania są losowane z puli {quizPool.length} i nie powtarzają się w jednej rundzie.</p>
+          <p>Pytania są losowane z puli {quizPool.length}, nie powtarzają się, a każda runda obejmuje wszystkie działy.</p>
           <button class="primary-button" onclick={startRound}>Rozpocznij test <span aria-hidden="true">→</span></button>
         </div>
       {:else if quizFinished}

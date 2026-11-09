@@ -19,7 +19,8 @@ Vite poda adres lokalnej strony w terminalu.
 - wyszukiwarka notatek i pojęć;
 - chronologia wydarzeń z lat 1945–1994;
 - słowniczek pojęć;
-- quiz z pulą 84 pytań, losujący 20 różnych pytań na rundę;
+- quiz z pulą 93 pytań obejmujących wszystkie pojęcia i działy, losujący 20 różnych pytań na rundę;
+- każda runda zawiera co najmniej jedno pytanie z każdego działu;
 - natychmiastowa informacja zwrotna i wynik po zakończeniu rundy.
 
 ## Sprawdzenie i build
