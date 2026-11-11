@@ -1,6 +1,6 @@
-# Świat po II wojnie światowej
+# Atlas nauki
 
-Polskojęzyczna aplikacja do powtórki historii w formie notatek, chronologii, słowniczka i losowanego quizu ABC.
+Polskojęzyczny hub do nauki, który porządkuje materiały według przedmiotów i działów. Z katalogu można przejść do historii świata po II wojnie światowej lub działu fizyki atomowej.
 
 ## Uruchomienie
 
@@ -15,6 +15,7 @@ Vite poda adres lokalnej strony w terminalu.
 
 ## Zawartość
 
+- katalog przedmiotów: Historia i Fizyka;
 - pięć działów z przyczynami, przebiegiem i skutkami wydarzeń;
 - wyszukiwarka notatek i pojęć;
 - chronologia wydarzeń z lat 1945–1994;
@@ -22,6 +23,7 @@ Vite poda adres lokalnej strony w terminalu.
 - quiz z pulą 93 pytań obejmujących wszystkie pojęcia i działy, losujący 20 różnych pytań na rundę;
 - każda runda zawiera co najmniej jedno pytanie z każdego działu;
 - natychmiastowa informacja zwrotna i wynik po zakończeniu rundy.
+- dział „Fizyka atomowa i kwanty promieniowania elektromagnetycznego” z osobnymi, pustymi miejscami na tematy, pojęcia i testy.
 
 ## Sprawdzenie i build
 

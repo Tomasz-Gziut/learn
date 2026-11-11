@@ -3,6 +3,13 @@
   import { quizPool } from './quiz.js';
 
   const questionsPerRound = 20;
+  const hubHref = window.location.pathname;
+  const subjectHref = (subject) => `${hubHref}?subject=${encodeURIComponent(subject)}`;
+  const physicsModes = [
+    { id: 'physics-topics', number: '01', label: 'Tematy', note: 'Lekcje i uporządkowane zagadnienia' },
+    { id: 'physics-concepts', number: '02', label: 'Pojęcia', note: 'Słownik najważniejszych terminów' },
+    { id: 'physics-tests', number: '03', label: 'Testy', note: 'Ćwiczenia sprawdzające wiedzę' }
+  ];
 
   const timeline = [
     {year:'1945',label:'Koniec wojny · niepodległość ogłoszona w Indonezji',href:'#azja',world:true},
@@ -44,6 +51,12 @@
   let score = 0;
   let lastRoundSignature = '';
   let answerStatus = '';
+  function viewFromUrl() {
+    const subject = new URLSearchParams(window.location.search).get('subject');
+    return subject === 'history' || subject === 'physics' ? subject : 'hub';
+  }
+
+  let currentView = viewFromUrl();
 
   function normalizeSearchText(value) {
     return value
@@ -145,13 +158,89 @@
 <svelte:window onkeydown={handleShortcut} />
 
 <svelte:head>
-  <title>Świat po II wojnie światowej — powtórka</title>
-  <meta name="description" content="Czytelne notatki, chronologia i losowany quiz ABC z historii świata po II wojnie światowej." />
+  <title>{currentView === 'history' ? 'Świat po II wojnie światowej — historia' : currentView === 'physics' ? 'Fizyka atomowa — dział nauki' : 'Ucz się po swojemu — katalog przedmiotów'}</title>
+  <meta name="description" content={currentView === 'history' ? 'Czytelne notatki, chronologia i losowany quiz ABC z historii świata po II wojnie światowej.' : 'Wybierz przedmiot i dział, aby uczyć się po swojemu.'} />
 </svelte:head>
 
 <a class="skip-link" href="#main">Przejdź do treści</a>
+{#if currentView === 'hub'}
+<header class="site-header hub-header">
+  <a class="wordmark" href="#top" aria-label="Ucz się po swojemu — strona główna"><span class="mark">U.</span><span>ATLAS NAUKI <small>KATALOG PRZEDMIOTÓW</small></span></a>
+  <a class="hub-header-link" href="#subjects">Przedmioty <span aria-hidden="true">↓</span></a>
+</header>
+<main id="main" class="hub-main">
+  <section class="hub-hero" id="top" aria-labelledby="page-title">
+    <div class="hub-hero-copy">
+      <p class="eyebrow"><span class="eyebrow-line"></span> TWOJE MIEJSCE DO POWTÓREK</p>
+      <h1 id="page-title">Ucz się<br /><em>po swojemu.</em></h1>
+      <p class="hub-deck">Wybierz przedmiot, znajdź swój dział i wracaj do nauki wtedy, kiedy tego potrzebujesz.</p>
+      <a class="text-link" href="#subjects">Odkryj przedmioty <span aria-hidden="true">↓</span></a>
+    </div>
+    <aside class="hub-aside" aria-label="Jak korzystać z atlasu nauki">
+      <div class="hub-atlas-mark" aria-hidden="true"><span>ATLAS</span><strong>01</strong><i></i><b>WIEDZY</b></div>
+      <p class="aside-caption">Twoja nauka,<br />ułożona w rozdziały.</p>
+      <p class="aside-note">Każdy przedmiot prowadzi do działów, a każdy dział — do materiałów, które pomagają zrozumieć więcej.</p>
+    </aside>
+  </section>
+  <section class="subject-section" id="subjects" aria-labelledby="subjects-title">
+    <div class="section-heading">
+      <div><p class="eyebrow"><span class="section-no">01</span> KATALOG PRZEDMIOTÓW</p><h2 id="subjects-title">Znajdź swój<br /><em>następny temat.</em></h2></div>
+      <p class="section-intro">Wybierz przedmiot i otwórz dział, który chcesz powtórzyć.</p>
+    </div>
+    <div class="subject-grid">
+      <article class="subject-card history-card">
+        <div class="subject-card-top"><span class="subject-index">01 / PRZEDMIOT</span><span class="subject-symbol" aria-hidden="true">H.</span></div>
+        <p class="subject-label">NAUKI HUMANISTYCZNE</p>
+        <h3>Historia</h3>
+        <p class="subject-description">Poznaj wydarzenia, które ukształtowały powojenny świat — od podziału Europy po przemiany społeczne.</p>
+        <div class="department-heading"><span>DZIAŁ</span><i></i></div>
+        <a class="department-link" href={subjectHref('history')} aria-label="Otwórz dział Świat po II wojnie światowej">
+          <span><small>01</small> Świat po II wojnie światowej</span><b aria-hidden="true">↗</b>
+        </a>
+      </article>
+      <article class="subject-card physics-card">
+        <div class="subject-card-top"><span class="subject-index">02 / PRZEDMIOT</span><span class="subject-symbol" aria-hidden="true">Φ.</span></div>
+        <p class="subject-label">NAUKI ŚCISŁE</p>
+        <h3>Fizyka</h3>
+        <p class="subject-description">Odkrywaj zjawiska i prawa, które opisują świat — od najmniejszych cząstek po energię promieniowania.</p>
+        <div class="department-heading"><span>DZIAŁ</span><i></i></div>
+        <a class="department-link" href={subjectHref('physics')} aria-label="Otwórz dział Fizyka atomowa i kwanty promieniowania elektromagnetycznego">
+          <span><small>01</small> Fizyka atomowa i kwanty promieniowania elektromagnetycznego</span><b aria-hidden="true">↗</b>
+        </a>
+      </article>
+    </div>
+  </section>
+</main>
+<footer class="site-footer"><span class="footer-mark" aria-hidden="true">U.</span><span>Atlas nauki <i>·</i> ucz się po swojemu</span><a href="#top">Wróć na górę ↑</a></footer>
+{:else if currentView === 'physics'}
+<header class="site-header department-header">
+  <a class="wordmark" href={hubHref} aria-label="Powrót do katalogu przedmiotów"><span class="mark">U.</span><span>ATLAS NAUKI <small>← KATALOG PRZEDMIOTÓW</small></span></a>
+  <nav aria-label="Nawigacja po dziale">{#each physicsModes as mode}<a href={`#${mode.id}`}>{mode.label}</a>{/each}</nav>
+</header>
+<main id="main" class="physics-main">
+  <section class="physics-hero" id="top" aria-labelledby="physics-title">
+    <a class="back-link" href={hubHref}><span aria-hidden="true">←</span> Powrót do katalogu przedmiotów</a>
+    <p class="eyebrow"><span class="eyebrow-line"></span> FIZYKA <span class="crumb-divider">/</span> DZIAŁ 01</p>
+    <h1 id="physics-title">Fizyka atomowa<br />i kwanty <em>promieniowania<br />elektromagnetycznego.</em></h1>
+    <p class="hub-deck">Wybierz sposób nauki. Materiały do tego działu będą pojawiać się tutaj.</p>
+    <nav class="mode-index" aria-label="Tryby nauki w dziale">
+      {#each physicsModes as mode}<a href={`#${mode.id}`}><span>{mode.number}</span><b>{mode.label}</b><small>{mode.note}</small><i aria-hidden="true">↓</i></a>{/each}
+    </nav>
+  </section>
+  <section class="physics-modes" aria-label="Materiały do nauki">
+    {#each physicsModes as mode}
+      <article class="physics-mode" id={mode.id}>
+        <span class="mode-number">{mode.number}</span>
+        <div><p class="eyebrow">{mode.label.toUpperCase()}</p><h2>{mode.label}</h2><p class="physics-placeholder">Materiały do tego działu pojawią się wkrótce.</p></div>
+        <span class="placeholder-mark" aria-hidden="true">✳</span>
+      </article>
+    {/each}
+  </section>
+</main>
+<footer class="site-footer"><span class="footer-mark" aria-hidden="true">U.</span><span>Fizyka <i>·</i> dział 01</span><a class="footer-nav" href={hubHref}>Powrót do katalogu ↑</a></footer>
+{:else}
 <header class="site-header">
-  <a class="wordmark" href="#top" aria-label="Historia — strona główna"><span class="mark">H.</span><span>HISTORIA <small>zeszyt powtórkowy / 01</small></span></a>
+  <a class="wordmark" href={hubHref} aria-label="Powrót do katalogu przedmiotów"><span class="mark">H.</span><span>HISTORIA <small>← KATALOG PRZEDMIOTÓW</small></span></a>
   <nav aria-label="Nawigacja główna"><a href="#notatki">Notatki</a><a href="#pojecia">Pojęcia</a><a href="#test">Test</a><a href="#zrodla">Źródła</a></nav>
 </header>
 <main id="main">
@@ -253,6 +342,6 @@
   </ul></div></section>
 </main>
 <footer class="site-footer"><a class="footer-mark" href="#top">H.</a><span>Historia powszechna <i>·</i> powtórka po 1945</span><a href="#top">Wróć na górę ↑</a></footer>
-
+{/if}
 
 
