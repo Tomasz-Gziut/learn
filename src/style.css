@@ -215,3 +215,202 @@
 .physics-event .physics-formula{margin-top:.65rem}
 .physics-formula code{display:inline-block;max-width:100%;padding:.45rem .6rem;border-left:2px solid var(--ochre);background:#eee9de;color:#263d62;font:.7rem/1.65 "Segoe UI",sans-serif;overflow-wrap:anywhere}
 @media(max-width:600px){.physics-path-track{min-width:1050px}}
+
+.physics-event .formula-card{margin-top:.9rem}
+.formula-card{min-width:0;padding:1rem 1.1rem;border:1px solid #d5cdbf;border-left:3px solid var(--ochre);background:rgba(255,255,255,.42)}
+.formula-card-heading{display:flex;justify-content:space-between;align-items:center;gap:1rem;color:#876b3c;font-size:.57rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+.formula-card-mark{color:#b18a4a;font:1.1rem var(--serif)}
+.formula-equation{margin:.65rem 0 .75rem;color:#203b6a;font:1.1rem/1.5 var(--serif);overflow-wrap:anywhere}
+.formula-equation code{font:inherit;white-space:normal}
+.formula-symbols{display:flex;flex-wrap:wrap;gap:.45rem 1rem;margin:0;padding-top:.7rem;border-top:1px solid #dfd8cc}
+.formula-symbols>div{display:grid;grid-template-columns:auto minmax(0,1fr);gap:.45rem;align-items:baseline;min-width:min(100%,190px);max-width:100%}
+.formula-symbols dt{color:var(--blue);font:italic 1rem var(--serif)}
+.formula-symbols dd{display:grid;gap:.12rem;margin:0;color:#505968;font-size:.65rem;line-height:1.4}
+.formula-symbols dd span{color:#81714f;font-size:.58rem}
+.formula-meta{display:grid;grid-template-columns:65px minmax(0,1fr);gap:.55rem;margin-top:.7rem}
+.formula-meta-label{padding-top:.08rem;color:#876b3c;font-size:.54rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase}
+.formula-meta ul{display:grid;gap:.25rem;margin:0;padding:0;list-style:none;color:#535d6b;font-size:.65rem;line-height:1.5}
+.formula-notes{padding-top:.65rem;border-top:1px solid #dfd8cc}
+.formula-card-compact{padding:.85rem 1rem}
+.formula-card-compact .formula-equation{margin:.5rem 0 .65rem;font-size:1.18rem}
+.formula-card-note .formula-equation{color:#465465;font:italic 1rem/1.6 var(--serif)}
+
+.tutorial-section{padding:5.7rem max(calc((100vw - 1200px)/2),5.3vw) 6rem;background:#e9e4d8;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.tutorial-heading{align-items:end}
+.tutorial-heading-copy{display:grid;justify-items:start;gap:1rem;max-width:410px}
+.tutorial-heading-copy .section-intro{max-width:410px}
+.tutorial-list{max-width:960px;margin:3.1rem auto 0;border-top:1px solid #c8c0b2}
+.tutorial-example{border-bottom:1px solid #c8c0b2;scroll-margin-top:1rem}
+.tutorial-example-summary{display:grid;grid-template-columns:2.5rem minmax(0,1fr) 1.6rem;gap:.8rem;align-items:start;padding:1.35rem .25rem 1.4rem 0;cursor:pointer;list-style:none}
+.tutorial-example-summary::-webkit-details-marker,.tutorial-step summary::-webkit-details-marker{display:none}
+.tutorial-example-index{padding-top:.13rem;color:var(--ochre);font:1.15rem var(--serif)}
+.tutorial-example-title{display:grid;gap:.27rem;font:1.28rem/1.25 var(--serif)}
+.tutorial-category{color:#9a493b;font:800 .55rem/1.4 "Segoe UI",sans-serif;letter-spacing:.11em;text-transform:uppercase}
+.tutorial-example-body{padding:0 2.4rem 1.8rem 3.3rem}
+.tutorial-task{max-width:740px;margin:0 0 1rem;color:#3f4b5c;font-size:.82rem;line-height:1.7}
+.tutorial-example-body .formula-card{margin-bottom:1.1rem}
+.tutorial-steps{margin:0;padding:0;border-top:1px solid #d0c8b9;list-style:none}
+.tutorial-steps>li{border-bottom:1px solid #d0c8b9}
+.tutorial-step summary{display:grid;grid-template-columns:2rem minmax(0,1fr) 1rem;gap:.65rem;align-items:center;padding:.82rem .2rem .82rem 0;cursor:pointer;list-style:none;color:var(--ink);font:1rem/1.4 var(--serif)}
+.tutorial-step-index{color:#98763f;font:.62rem "Segoe UI",sans-serif;letter-spacing:.08em}
+.tutorial-step-mark{color:var(--blue);font:1rem var(--serif);transition:transform .2s ease}
+.tutorial-step[open] .tutorial-step-mark{transform:rotate(45deg)}
+.tutorial-step-content{padding:0 1.6rem .85rem 2.65rem}
+.tutorial-step-content p{margin:0;color:#505968;font-size:.76rem;line-height:1.7}
+.tutorial-controls{display:flex;align-items:center;flex-wrap:wrap;gap:.6rem 1rem;padding-top:1rem}
+.tutorial-controls .quiet-button{background:rgba(255,255,255,.22)}
+.tutorial-controls .quiet-button span{margin-left:.35rem;color:var(--ochre)}
+.tutorial-reset-status{color:#506656;font-size:.67rem}
+.tutorial-footnote{max-width:960px;margin:1.1rem auto 0;color:#747773;font:italic .76rem/1.6 var(--serif)}
+
+@media(max-width:800px){
+  .tutorial-section{padding-top:4.7rem;padding-bottom:5rem}
+}
+@media(max-width:600px){
+  .tutorial-section{padding:4rem 1.25rem 4.5rem}
+  .tutorial-heading-copy{max-width:none}
+  .tutorial-list{margin-top:2rem}
+  .tutorial-example-summary{grid-template-columns:1.8rem minmax(0,1fr) 1.5rem;gap:.45rem;padding:1.15rem .1rem 1.2rem 0}
+  .tutorial-example-title{font-size:1.15rem}
+  .tutorial-example-body{padding:0 0 1.3rem}
+  .formula-card{padding:.85rem}
+  .formula-card-compact{padding:.75rem .85rem}
+  .formula-equation{font-size:1rem}
+  .formula-card-compact .formula-equation{font-size:1.06rem}
+  .formula-symbols{gap:.5rem .75rem}
+  .formula-symbols>div{min-width:calc(50% - .5rem)}
+  .formula-meta{grid-template-columns:53px minmax(0,1fr);gap:.4rem}
+  .tutorial-step summary{grid-template-columns:1.7rem minmax(0,1fr) 1rem;gap:.45rem}
+  .tutorial-step-content{padding-left:2.15rem;padding-right:.2rem}
+}
+
+/* Physics reading scale: keep the History page's established typography unchanged. */
+.physics-header{
+  max-width:1520px;
+  margin-inline:auto;
+  padding-inline:clamp(1.5rem,4vw,3.5rem);
+}
+.physics-header .wordmark{font-size:.9rem}
+.physics-header .wordmark small{font-size:.7rem}
+.physics-header nav a{font-size:1rem}
+.physics-content .hero,
+.physics-content .notes-section,
+.physics-content .quiz-section{max-width:1480px}
+.physics-content .hero{gap:clamp(3rem,7vw,7rem)}
+.physics-content .timeline-section,
+.physics-content .tutorial-section,
+.physics-content .glossary-section,
+.physics-content .sources-section{
+  padding-right:max(calc((100vw - 1480px)/2),5.3vw);
+  padding-left:max(calc((100vw - 1480px)/2),5.3vw);
+}
+.physics-content .timeline-scroll,
+.physics-content .timeline-track,
+.physics-content .timeline-legend,
+.physics-content .timeline-caption{max-width:1480px}
+.physics-content .eyebrow{font-size:.78rem}
+.physics-content .section-intro{font-size:1rem}
+.physics-content .timeline-legend{font-size:.9rem}
+.physics-content .timeline-label{max-width:160px;font-size:.9rem;line-height:1.55}
+.physics-content .timeline-caption{font-size:.72rem;letter-spacing:.07em}
+.physics-content .notes-layout{
+  grid-template-columns:minmax(230px,.28fr) minmax(0,1fr);
+  gap:clamp(2rem,4vw,4rem);
+}
+.physics-content .index-label,
+.physics-content .topic-tag{font-size:.78rem}
+.physics-content .notes-index a{font-size:1rem;line-height:1.45}
+.physics-content .notes-index a span{font-size:.76rem}
+.physics-content .notes-index p{font-size:.95rem;line-height:1.6}
+.physics-content .topic summary{grid-template-columns:2.8rem minmax(0,1fr) 2rem;gap:.9rem}
+.physics-content .topic-number{font-size:1.35rem}
+.physics-content .topic-title{font-size:clamp(1.55rem,2.1vw,2rem);line-height:1.2}
+.physics-content .topic-intro{max-width:72ch;font-size:1rem;line-height:1.65}
+.physics-content .expand-mark{width:1.8rem;height:1.8rem;font-size:1.25rem}
+.physics-content .topic-events{padding-left:3.7rem}
+.physics-content .event{grid-template-columns:108px minmax(0,1fr);gap:1.4rem}
+.physics-content .event-date{font-size:1.1rem}
+.physics-content .event h3{font-size:1.35rem;line-height:1.35}
+.physics-content .physics-event>.event-body>p{max-width:80ch;font-size:1rem;line-height:1.65}
+.physics-content .physics-event .formula-card{margin-top:1rem}
+.physics-content .formula-card{padding:1.2rem 1.35rem}
+.physics-content .formula-card-heading{font-size:.82rem}
+.physics-content .formula-card-mark{font-size:1.25rem}
+.physics-content .formula-equation{margin:.75rem 0 .9rem;font-size:clamp(1.35rem,1.45vw,1.55rem);line-height:1.5}
+.physics-content .formula-symbols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:.8rem 1.5rem;padding-top:.85rem}
+.physics-content .formula-symbols>div{grid-template-columns:auto minmax(0,1fr);gap:.6rem;min-width:0}
+.physics-content .formula-symbols dt{font-size:1.2rem}
+.physics-content .formula-symbols dd{font-size:.98rem;line-height:1.5}
+.physics-content .formula-symbols dd span{font-size:.94rem}
+.physics-content .formula-meta{grid-template-columns:82px minmax(0,1fr);gap:.7rem;margin-top:.85rem}
+.physics-content .formula-meta-label{font-size:.8rem}
+.physics-content .formula-meta ul{font-size:.98rem;line-height:1.6}
+.physics-content .formula-card-compact{padding:1rem 1.2rem}
+.physics-content .formula-card-compact .formula-equation{font-size:1.45rem}
+.physics-content .formula-card-note .formula-equation{font-size:1.3rem}
+.physics-content .tutorial-list{max-width:1120px}
+.physics-content .tutorial-footnote{max-width:1120px;font-size:.95rem}
+.physics-content .tutorial-example-summary{grid-template-columns:2.8rem minmax(0,1fr) 2rem}
+.physics-content .tutorial-example-index{font-size:1.3rem}
+.physics-content .tutorial-example-title{font-size:1.5rem}
+.physics-content .tutorial-category{font-size:.78rem}
+.physics-content .tutorial-example-body{padding-left:3.7rem}
+.physics-content .tutorial-task{font-size:1rem;line-height:1.65}
+.physics-content .tutorial-step summary{grid-template-columns:2.2rem minmax(0,1fr) 1.2rem;font-size:1.15rem;min-height:3.25rem}
+.physics-content .tutorial-step-index{font-size:.8rem}
+.physics-content .tutorial-step-content p{font-size:1rem;line-height:1.65}
+.physics-content .tutorial-reset-status{font-size:.9rem}
+.physics-content .glossary-entry dd{font-size:.98rem;line-height:1.65}
+.physics-content .source-note{font-size:1rem;line-height:1.7}
+.physics-content .source-links a{font-size:.95rem}
+.physics-content .quiz-intro>p:not(.eyebrow){font-size:1rem}
+.physics-content .quiz-label{font-size:.8rem}
+.physics-content .quiz-category{font-size:.9rem}
+.physics-content .quiz-welcome>p,
+.physics-content .quiz-finish>p{font-size:1rem;line-height:1.65}
+.physics-content .primary-button{font-size:.95rem;min-height:2.9rem}
+.physics-content .answer-option{font-size:1rem;line-height:1.55;padding:.9rem}
+.physics-content .answer-feedback p{font-size:.98rem;line-height:1.65}
+
+@media(max-width:800px){
+  .physics-content .notes-layout{grid-template-columns:1fr;gap:1.5rem}
+  .physics-content .notes-index{gap:.4rem .8rem}
+  .physics-content .notes-index a{padding:.35rem 0}
+  .physics-content .topic-events{padding-left:0}
+  .physics-content .tutorial-section{padding-top:4.7rem;padding-bottom:5rem}
+}
+
+@media(max-width:600px){
+  .physics-header{padding:.7rem 1.1rem}
+  .physics-header nav a{font-size:.92rem}
+  .physics-content .hero{gap:2.7rem}
+  .physics-content .timeline-section,
+  .physics-content .tutorial-section,
+  .physics-content .glossary-section,
+  .physics-content .sources-section{padding-right:1.25rem;padding-left:1.25rem}
+  .physics-content .notes-section{padding:4.5rem 1.25rem}
+  .physics-content .notes-index{gap:.4rem .7rem}
+  .physics-content .notes-index a{font-size:.95rem}
+  .physics-content .topic summary{grid-template-columns:1.8rem minmax(0,1fr) 1.5rem;gap:.45rem}
+  .physics-content .topic-title{font-size:1.4rem}
+  .physics-content .topic-events{padding-left:0}
+  .physics-content .event{grid-template-columns:1fr;gap:.4rem}
+  .physics-content .event-date{font-size:1rem}
+  .physics-content .formula-card{padding:.95rem}
+  .physics-content .formula-card-compact{padding:.85rem .95rem}
+  .physics-content .formula-equation{font-size:1.3rem}
+  .physics-content .formula-card-compact .formula-equation{font-size:1.35rem}
+  .physics-content .formula-card-note .formula-equation{font-size:1.2rem}
+  .physics-content .formula-symbols{gap:.65rem .75rem}
+  .physics-content .formula-symbols>div{min-width:0}
+  .physics-content .formula-meta{grid-template-columns:74px minmax(0,1fr);gap:.45rem}
+  .physics-content .tutorial-section{padding:4rem 1.25rem 4.5rem}
+  .physics-content .tutorial-example-summary{grid-template-columns:1.8rem minmax(0,1fr) 1.5rem;gap:.45rem;padding:1.15rem .1rem 1.2rem 0}
+  .physics-content .tutorial-example-title{font-size:1.25rem}
+  .physics-content .tutorial-example-body{padding:0 0 1.3rem}
+  .physics-content .tutorial-step summary{grid-template-columns:1.7rem minmax(0,1fr) 1rem;gap:.45rem}
+  .physics-content .tutorial-step-content{padding-left:2.15rem;padding-right:.2rem}
+  .physics-content .quiz-section{grid-template-columns:1fr;gap:2rem;padding:4.3rem 1.25rem}
+  .physics-content .quiz-panel{padding:1.3rem}
+  .physics-content .answer-option{font-size:.96rem}
+}

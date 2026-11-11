@@ -1,8 +1,10 @@
 <script>
   import { topics, glossary } from './data.js';
   import { quizPool } from './quiz.js';
-  import { physicsConcepts, physicsQuizPool, physicsTopics } from './physics.js';
+  import { physicsConcepts, physicsFormulaInfo, physicsQuizPool, physicsTopics, physicsTutorials } from './physics.js';
   import Quiz from './Quiz.svelte';
+  import FormulaCard from './FormulaCard.svelte';
+  import WorkedExample from './WorkedExample.svelte';
 
   const hubHref = window.location.pathname;
   const subjectHref = (subject) => `${hubHref}?subject=${encodeURIComponent(subject)}`;
@@ -94,8 +96,8 @@
 <svelte:window onkeydown={handleShortcut} />
 
 <svelte:head>
-  <title>{currentView === 'history' ? 'Świat po II wojnie światowej — historia' : currentView === 'physics' ? 'Fizyka atomowa i kwanty — notatki i quiz' : 'Ucz się po swojemu — katalog przedmiotów'}</title>
-  <meta name="description" content={currentView === 'history' ? 'Czytelne notatki, chronologia i losowany quiz ABC z historii świata po II wojnie światowej.' : currentView === 'physics' ? 'Notatki, wzory, słowniczek i losowany quiz ABC z fizyki atomowej i kwantów.' : 'Wybierz przedmiot i dział, aby uczyć się po swojemu.'} />
+  <title>{currentView === 'history' ? 'Świat po II wojnie światowej — historia' : currentView === 'physics' ? 'Fizyka atomowa i kwanty — wzory, tutoriale i quiz' : 'Ucz się po swojemu — katalog przedmiotów'}</title>
+  <meta name="description" content={currentView === 'history' ? 'Czytelne notatki, chronologia i losowany quiz ABC z historii świata po II wojnie światowej.' : currentView === 'physics' ? 'Notatki, wzory, tutoriale krok po kroku i losowany quiz ABC z fizyki atomowej i kwantów.' : 'Wybierz przedmiot i dział, aby uczyć się po swojemu.'} />
 </svelte:head>
 
 <a class="skip-link" href="#main">Przejdź do treści</a>
@@ -149,11 +151,11 @@
 </main>
 <footer class="site-footer"><span class="footer-mark" aria-hidden="true">U.</span><span>Atlas nauki <i>·</i> ucz się po swojemu</span><a href="#top">Wróć na górę ↑</a></footer>
 {:else if currentView === 'physics'}
-<header class="site-header">
+<header class="site-header physics-header">
   <a class="wordmark" href={hubHref} aria-label="Powrót do katalogu przedmiotów"><span class="mark">Φ.</span><span>FIZYKA <small>← KATALOG PRZEDMIOTÓW</small></span></a>
-  <nav aria-label="Nawigacja główna"><a href="#notatki">Notatki</a><a href="#pojecia">Pojęcia</a><a href="#test">Test</a><a href="#zrodla">Źródła</a></nav>
+  <nav aria-label="Nawigacja główna"><a href="#notatki">Notatki</a><a href="#tutoriale">Tutoriale</a><a href="#pojecia">Pojęcia</a><a href="#test">Test</a><a href="#zrodla">Źródła</a></nav>
 </header>
-<main id="main">
+<main id="main" class="physics-content">
   <section class="hero" id="top" aria-labelledby="physics-title">
     <div class="hero-copy">
       <p class="eyebrow"><span class="eyebrow-line"></span> POWTÓRKA · FIZYKA ATOMOWA</p>
@@ -199,7 +201,7 @@
               {#each topic.sections as section, i}
                 <article class="event physics-event">
                   <div class="event-date">{topic.number}.{String(i + 1).padStart(2, '0')}</div>
-                  <div class="event-body"><h3>{section.heading}</h3><p>{section.text}</p>{#if section.formula}<p class="physics-formula"><code>{section.formula}</code></p>{/if}</div>
+                  <div class="event-body"><h3>{section.heading}</h3><p>{section.text}</p>{#if section.formula}<FormulaCard formula={section.formula} info={physicsFormulaInfo[`${topic.id}:${i}`] ?? {}} />{/if}</div>
                 </article>
               {/each}
             </div>
@@ -208,13 +210,25 @@
       </div>
     </div>
   </section>
+  <section class="tutorial-section" id="tutoriale" aria-labelledby="physics-tutorial-title">
+    <div class="section-heading tutorial-heading">
+      <div><p class="eyebrow"><span class="section-no">C</span> PRACUJ Z DANYMI</p><h2 id="physics-tutorial-title">Policz.<br /><em>Sprawdź.</em></h2></div>
+      <div class="tutorial-heading-copy"><p class="section-intro">Zobacz, jak przejść od danych i jednostek do uzasadnionego wyniku. Rozwijaj etapy po kolei albo wracaj do wybranego kroku.</p><a class="text-link" href="#notatki">Wróć do wzorów <span aria-hidden="true">↑</span></a></div>
+    </div>
+    <div class="tutorial-list">
+      {#each physicsTutorials as example, i}
+        <WorkedExample {example} index={i} />
+      {/each}
+    </div>
+    <p class="tutorial-footnote">Wartości stałych są zaokrąglone; ostatnia metoda pokazuje dodatkowe zastosowanie okresu połowicznego zaniku.</p>
+  </section>
   <section class="glossary-section" id="pojecia" aria-labelledby="physics-glossary-title">
-    <div class="glossary-side"><p class="eyebrow"><span class="section-no">C</span> SŁOWNICZEK</p><h2 id="physics-glossary-title">Pojęcia,<br /><em>które warto<br />znać.</em></h2><p>Wielkości, prawa i zjawiska, do których wracają notatki z całego działu.</p><span class="glossary-count">{physicsConcepts.length.toString().padStart(2, '0')} HASŁA</span></div>
+    <div class="glossary-side"><p class="eyebrow"><span class="section-no">D</span> SŁOWNICZEK</p><h2 id="physics-glossary-title">Pojęcia,<br /><em>które warto<br />znać.</em></h2><p>Wielkości, prawa i zjawiska, do których wracają notatki z całego działu.</p><span class="glossary-count">{physicsConcepts.length.toString().padStart(2, '0')} HASŁA</span></div>
     <dl class="glossary-list">{#each physicsConcepts as [term, definition], i}<div class="glossary-entry"><dt><span>{String(i + 1).padStart(2, '0')}</span>{term}</dt><dd>{definition}</dd></div>{/each}</dl>
   </section>
   <section class="quiz-section" id="test" aria-labelledby="physics-quiz-title">
     <div class="quiz-intro">
-      <p class="eyebrow"><span class="section-no">D</span> SPRAWDŹ SIĘ</p>
+      <p class="eyebrow"><span class="section-no">E</span> SPRAWDŹ SIĘ</p>
       <h2 id="physics-quiz-title">Sprawdź,<br /><em>co pamiętasz.</em></h2>
       <p>W każdej rundzie odpowiadasz na 10 losowych pytań z całego działu. Po każdej odpowiedzi od razu poznajesz wynik i wyjaśnienie.</p>
       <a class="text-link" href="#notatki">Wróć do notatek <span aria-hidden="true">↑</span></a>
@@ -222,7 +236,7 @@
     <Quiz pool={physicsQuizPool} roundSize={10} />
   </section>
   <section class="sources-section" id="zrodla" aria-labelledby="physics-sources-title">
-    <div class="sources-heading"><p class="eyebrow"><span class="section-no">E</span> DO DALSZEJ LEKTURY</p><h2 id="physics-sources-title">Źródła<br /><em>i kontekst.</em></h2></div>
+    <div class="sources-heading"><p class="eyebrow"><span class="section-no">F</span> DO DALSZEJ LEKTURY</p><h2 id="physics-sources-title">Źródła<br /><em>i kontekst.</em></h2></div>
     <div class="sources-copy">
       <p class="source-note"><span>01</span><b>Materiały do powtórki</b><br />Punktem wyjścia są dostarczone materiały do działu: siedem lekcji o budowie atomu, promieniowaniu termicznym, fotonach, fotoefekcie, falach materii, widmach i laserach oraz zestaw pytań kontrolnych. Notatki i wyjaśnienia są autorskim opracowaniem; wzory zapisano skrótowo, bez przepisywania fragmentów podręcznika.</p>
       <p class="source-note"><span>02</span><b>Stałe i dalsza lektura</b><br />Wartości stałych fizycznych podano w przybliżeniu. Dokładne wartości i dodatkowe wyjaśnienia znajdziesz w poniższych źródłach.</p>

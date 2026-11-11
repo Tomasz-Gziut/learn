@@ -24,6 +24,8 @@ Vite poda adres lokalnej strony w terminalu.
 - każda runda zawiera co najmniej jedno pytanie z każdego działu;
 - natychmiastowa informacja zwrotna i wynik po zakończeniu rundy;
 - dział fizyki atomowej z siedmioma lekcjami, 19 pojęciami oraz 12 pytaniami z kluczem odpowiedzi;
+- karty wzorów fizycznych z oznaczeniami wielkości, jednostkami, stałymi i warunkami stosowania;
+- tutoriale krok po kroku z obliczeniami z izotopów, prawa Wiena, fotonów, fotoefektu, fal materii, widm oraz rozpadu promieniotwórczego;
 - lekcje fizyki obejmują budowę jądra, promieniowanie termiczne, fotony, fotoefekt, fale materii, widma i lasery.
 
 ## Sprawdzenie i build
