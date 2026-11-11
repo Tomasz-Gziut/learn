@@ -154,3 +154,58 @@
   .physics-test-number small{max-width:38px}
   .site-footer .footer-nav{font-size:.61rem}
 }
+
+@media(min-width:801px){
+  .hub-hero{
+    gap:clamp(2rem,4.5vw,4.5rem);
+    padding-top:3rem;
+    padding-bottom:3rem;
+  }
+  .hub-hero h1{font-size:clamp(3.75rem,6.2vw,6.2rem)}
+  .hub-deck{margin-top:1.15rem;margin-bottom:1.1rem}
+  .hub-aside{padding-top:1rem;padding-bottom:1rem}
+  .hub-atlas-mark{width:142px;height:132px;margin-bottom:1.35rem}
+  .hub-atlas-mark strong{font-size:3.8rem}
+  .hub-aside .aside-caption{margin-bottom:.55rem}
+  .subject-section{padding-top:3.8rem}
+  .subject-section .section-heading{margin-bottom:1.8rem}
+  .subject-section .section-heading h2{font-size:clamp(2.8rem,4vw,3.8rem)}
+  .subject-section .section-heading h2 br{display:none}
+
+  .physics-hero{padding-top:2rem;padding-bottom:3rem}
+  .back-link{margin-bottom:2rem}
+  .physics-hero h1{
+    max-width:100%;
+    font-size:clamp(3rem,4.15vw,4rem);
+    line-height:1;
+  }
+  .physics-hero h1 br{display:none}
+  .physics-hero .hub-deck{margin-top:1rem}
+  .mode-index{margin-top:2rem}
+  .mode-index a{
+    min-height:124px;
+    justify-content:flex-start;
+    padding-top:1rem;
+  }
+  .mode-index a:not(:last-child)::after{
+    position:absolute;
+    z-index:0;
+    top:1.78rem;
+    left:50%;
+    width:100%;
+    height:1px;
+    background:var(--ochre);
+    content:"";
+  }
+  .mode-index a>span{
+    position:relative;
+    z-index:1;
+    display:grid;
+    width:1.55rem;
+    height:1.55rem;
+    place-items:center;
+    border:1px solid var(--ochre);
+    border-radius:50%;
+    background:var(--paper);
+  }
+}

@@ -190,7 +190,7 @@
   </section>
   <section class="subject-section" id="subjects" aria-labelledby="subjects-title">
     <div class="section-heading">
-      <div><p class="eyebrow"><span class="section-no">01</span> KATALOG PRZEDMIOTÓW</p><h2 id="subjects-title">Znajdź swój<br /><em>następny temat.</em></h2></div>
+      <div><p class="eyebrow"><span class="section-no">01</span> KATALOG PRZEDMIOTÓW</p><h2 id="subjects-title">Znajdź swój <br /><em>następny temat.</em></h2></div>
       <p class="section-intro">Wybierz przedmiot i otwórz dział, który chcesz powtórzyć.</p>
     </div>
     <div class="subject-grid">
@@ -227,7 +227,7 @@
   <section class="physics-hero" id="top" aria-labelledby="physics-title">
     <a class="back-link" href={hubHref}><span aria-hidden="true">←</span> Powrót do katalogu przedmiotów</a>
     <p class="eyebrow"><span class="eyebrow-line"></span> FIZYKA <span class="crumb-divider">/</span> DZIAŁ 01</p>
-    <h1 id="physics-title">Fizyka atomowa<br />i kwanty <em>promieniowania<br />elektromagnetycznego.</em></h1>
+    <h1 id="physics-title">Fizyka atomowa <br />i kwanty <em>promieniowania <br />elektromagnetycznego.</em></h1>
     <p class="hub-deck">Przejdź od budowy jądra do fotonów, widm i laserów. W każdym temacie znajdziesz wyjaśnienia, wzory i przykłady.</p>
     <nav class="mode-index" aria-label="Tryby nauki w dziale">
       {#each physicsModes as mode}<a href={`#${mode.id}`}><span>{mode.number}</span><b>{mode.label}</b><small>{mode.note}</small><i aria-hidden="true">↓</i></a>{/each}
