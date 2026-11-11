@@ -1,14 +1,15 @@
 <script>
   import { topics, glossary } from './data.js';
   import { quizPool } from './quiz.js';
+  import { physicsConcepts, physicsQuizPool, physicsTopics } from './physics.js';
 
   const questionsPerRound = 20;
   const hubHref = window.location.pathname;
   const subjectHref = (subject) => `${hubHref}?subject=${encodeURIComponent(subject)}`;
   const physicsModes = [
-    { id: 'physics-topics', number: '01', label: 'Tematy', note: 'Lekcje i uporządkowane zagadnienia' },
-    { id: 'physics-concepts', number: '02', label: 'Pojęcia', note: 'Słownik najważniejszych terminów' },
-    { id: 'physics-tests', number: '03', label: 'Testy', note: 'Ćwiczenia sprawdzające wiedzę' }
+    { id: 'physics-topics', number: '01', label: 'Tematy', note: `${physicsTopics.length} lekcji od budowy atomu po lasery` },
+    { id: 'physics-concepts', number: '02', label: 'Pojęcia', note: `${physicsConcepts.length} terminów i praw fizycznych` },
+    { id: 'physics-tests', number: '03', label: 'Testy', note: `${physicsQuizPool.length} pytań do samodzielnej powtórki` }
   ];
 
   const timeline = [
@@ -101,6 +102,11 @@
     }
     return result;
   }
+
+  const physicsTestQuestions = physicsQuizPool.map((question) => ({
+    ...question,
+    answers: shuffle([question.correct, ...question.wrong])
+  }));
 
   function startRound() {
     let nextRound;
@@ -222,19 +228,85 @@
     <a class="back-link" href={hubHref}><span aria-hidden="true">←</span> Powrót do katalogu przedmiotów</a>
     <p class="eyebrow"><span class="eyebrow-line"></span> FIZYKA <span class="crumb-divider">/</span> DZIAŁ 01</p>
     <h1 id="physics-title">Fizyka atomowa<br />i kwanty <em>promieniowania<br />elektromagnetycznego.</em></h1>
-    <p class="hub-deck">Wybierz sposób nauki. Materiały do tego działu będą pojawiać się tutaj.</p>
+    <p class="hub-deck">Przejdź od budowy jądra do fotonów, widm i laserów. W każdym temacie znajdziesz wyjaśnienia, wzory i przykłady.</p>
     <nav class="mode-index" aria-label="Tryby nauki w dziale">
       {#each physicsModes as mode}<a href={`#${mode.id}`}><span>{mode.number}</span><b>{mode.label}</b><small>{mode.note}</small><i aria-hidden="true">↓</i></a>{/each}
     </nav>
   </section>
   <section class="physics-modes" aria-label="Materiały do nauki">
-    {#each physicsModes as mode}
-      <article class="physics-mode" id={mode.id}>
-        <span class="mode-number">{mode.number}</span>
-        <div><p class="eyebrow">{mode.label.toUpperCase()}</p><h2>{mode.label}</h2><p class="physics-placeholder">Materiały do tego działu pojawią się wkrótce.</p></div>
-        <span class="placeholder-mark" aria-hidden="true">✳</span>
-      </article>
-    {/each}
+    <article class="physics-mode physics-topics-mode" id="physics-topics" aria-labelledby="physics-topics-title">
+      <span class="mode-number">{physicsModes[0].number}</span>
+      <div>
+        <p class="eyebrow">01 · TEMATY</p>
+        <h2 id="physics-topics-title">Od jądra do lasera.</h2>
+        <p class="physics-intro">Siedem krótkich lekcji prowadzi przez doświadczenia, prawa i modele opisujące atom oraz promieniowanie.</p>
+        <div class="physics-topic-list">
+          {#each physicsTopics as topic}
+            <details class="physics-topic" id={topic.id} open={topic.number === '01'}>
+              <summary>
+                <span class="physics-topic-number">{topic.number}</span>
+                <span class="physics-topic-heading"><strong>{topic.title}</strong><small>{topic.intro}</small></span>
+                <span class="expand-mark" aria-hidden="true">+</span>
+              </summary>
+              <div class="physics-topic-content">
+                {#each topic.sections as section}
+                  <article class="physics-subtopic">
+                    <h3>{section.heading}</h3>
+                    <p>{section.text}</p>
+                    {#if section.formula}<p class="physics-formula"><code>{section.formula}</code></p>{/if}
+                  </article>
+                {/each}
+              </div>
+            </details>
+          {/each}
+        </div>
+      </div>
+      <span class="physics-mode-mark" aria-hidden="true">01</span>
+    </article>
+    <article class="physics-mode physics-concepts-mode" id="physics-concepts" aria-labelledby="physics-concepts-title">
+      <span class="mode-number">{physicsModes[1].number}</span>
+      <div>
+        <p class="eyebrow">02 · POJĘCIA</p>
+        <h2 id="physics-concepts-title">Słownik do powtórki.</h2>
+        <p class="physics-intro">Najważniejsze wielkości, zjawiska i modele z działu atomowego.</p>
+        <dl class="physics-concept-list">
+          {#each physicsConcepts as [term, definition], i}
+            <div class="physics-concept">
+              <dt><span>{String(i + 1).padStart(2, '0')}</span>{term}</dt>
+              <dd>{definition}</dd>
+            </div>
+          {/each}
+        </dl>
+      </div>
+      <span class="physics-mode-mark" aria-hidden="true">02</span>
+    </article>
+    <article class="physics-mode physics-tests-mode" id="physics-tests" aria-labelledby="physics-tests-title">
+      <span class="mode-number">{physicsModes[2].number}</span>
+      <div>
+        <p class="eyebrow">03 · TESTY</p>
+        <h2 id="physics-tests-title">Sprawdź, co pamiętasz.</h2>
+        <p class="physics-intro">Najpierw wybierz odpowiedź, potem rozwiń klucz. Pytania obejmują cały dział.</p>
+        <ol class="physics-test-list">
+          {#each physicsTestQuestions as question, i}
+            <li class="physics-test">
+              <span class="physics-test-number">{String(i + 1).padStart(2, '0')} <small>{question.group}</small></span>
+              <div class="physics-test-body">
+                <h3>{question.prompt}</h3>
+                <ol class="physics-answer-list" type="A">
+                  {#each question.answers as answer}<li>{answer}</li>{/each}
+                </ol>
+                <details class="physics-answer-key">
+                  <summary>Pokaż odpowiedź i wyjaśnienie</summary>
+                  <p><strong>{question.correct}</strong></p>
+                  <p>{question.why}</p>
+                </details>
+              </div>
+            </li>
+          {/each}
+        </ol>
+      </div>
+      <span class="physics-mode-mark" aria-hidden="true">03</span>
+    </article>
   </section>
 </main>
 <footer class="site-footer"><span class="footer-mark" aria-hidden="true">U.</span><span>Fizyka <i>·</i> dział 01</span><a class="footer-nav" href={hubHref}>Powrót do katalogu ↑</a></footer>

@@ -22,8 +22,9 @@ Vite poda adres lokalnej strony w terminalu.
 - słowniczek pojęć;
 - quiz z pulą 93 pytań obejmujących wszystkie pojęcia i działy, losujący 20 różnych pytań na rundę;
 - każda runda zawiera co najmniej jedno pytanie z każdego działu;
-- natychmiastowa informacja zwrotna i wynik po zakończeniu rundy.
-- dział „Fizyka atomowa i kwanty promieniowania elektromagnetycznego” z osobnymi, pustymi miejscami na tematy, pojęcia i testy.
+- natychmiastowa informacja zwrotna i wynik po zakończeniu rundy;
+- dział fizyki atomowej z siedmioma lekcjami, 19 pojęciami oraz 12 pytaniami z kluczem odpowiedzi;
+- lekcje fizyki obejmują budowę jądra, promieniowanie termiczne, fotony, fotoefekt, fale materii, widma i lasery.
 
 ## Sprawdzenie i build
 

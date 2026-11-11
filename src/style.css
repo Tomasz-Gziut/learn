@@ -77,6 +77,37 @@
 .physics-placeholder{margin:.8rem 0 0;color:#626a74;font-size:.82rem;line-height:1.65}
 .placeholder-mark{justify-self:end;color:#c5a15e;font:1.5rem var(--serif)}
 .site-footer .footer-nav{margin-left:auto;color:var(--blue);font:inherit;text-decoration:none}
+.physics-intro{max-width:680px;margin:.8rem 0 1.6rem;color:#596170;font-size:.82rem;line-height:1.75}
+.physics-mode-mark{justify-self:end;color:#b79557;font:1.2rem var(--serif)}
+.physics-topic-list{border-top:1px solid var(--rule)}
+.physics-topic{border-bottom:1px solid var(--rule)}
+.physics-topic summary{display:grid;grid-template-columns:2.4rem minmax(0,1fr) 1.6rem;gap:.7rem;align-items:start;padding:1.05rem .1rem 1rem 0;cursor:pointer;list-style:none}
+.physics-topic summary::-webkit-details-marker{display:none}
+.physics-topic-number{padding-top:.12rem;color:var(--ochre);font:.8rem var(--serif)}
+.physics-topic-heading strong{display:block;color:var(--ink);font:1.16rem/1.3 var(--serif)}
+.physics-topic-heading small{display:block;margin-top:.25rem;color:#626a74;font-size:.73rem;line-height:1.55}
+.physics-topic .expand-mark{justify-self:end}
+.physics-topic-content{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.3rem 2rem;padding:.2rem 0 1.4rem 3.1rem}
+.physics-subtopic h3{margin:0 0 .45rem;font:1.02rem var(--serif)}
+.physics-subtopic p{margin:0;color:#505968;font-size:.75rem;line-height:1.7}
+.physics-subtopic .physics-formula{margin-top:.65rem}
+.physics-formula code{display:inline-block;max-width:100%;padding:.45rem .6rem;border-left:2px solid var(--ochre);background:#eee9de;color:#263d62;font: .7rem/1.65 "Segoe UI",sans-serif;overflow-wrap:anywhere}
+.physics-concept-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 2rem;margin:0;border-top:1px solid var(--rule)}
+.physics-concept{padding:.75rem 0 .85rem;border-bottom:1px solid var(--rule)}
+.physics-concept dt{color:var(--blue);font:1rem/1.35 var(--serif)}
+.physics-concept dt span{display:inline-block;width:2rem;color:#9c7a40;font:.58rem "Segoe UI",sans-serif}
+.physics-concept dd{margin:.35rem 0 0;color:#505968;font-size:.73rem;line-height:1.65}
+.physics-test-list{margin:0;padding:0;border-top:1px solid var(--rule);list-style:none}
+.physics-test{display:grid;grid-template-columns:90px minmax(0,1fr);gap:1rem;padding:1.15rem 0;border-bottom:1px solid var(--rule)}
+.physics-test-number{color:var(--ochre);font:.8rem var(--serif)}
+.physics-test-number small{display:block;margin-top:.35rem;color:#777b80;font:.57rem "Segoe UI",sans-serif}
+.physics-test-body h3{margin:0 0 .65rem;font:1.08rem/1.4 var(--serif)}
+.physics-answer-list{display:grid;gap:.32rem;margin:0;padding-left:1.5rem;color:#505968;font-size:.74rem;line-height:1.55}
+.physics-answer-list li{padding-left:.2rem}
+.physics-answer-key{margin-top:.7rem}
+.physics-answer-key summary{width:fit-content;color:var(--blue);font-size:.7rem;font-weight:700;cursor:pointer}
+.physics-answer-key>p{margin:.45rem 0 0;color:#505968;font-size:.73rem;line-height:1.6}
+.physics-answer-key>p:first-of-type{color:#263d62}
 @media(max-width:800px){
   .hub-hero{grid-template-columns:1fr .65fr;gap:2rem;padding-top:5rem}
   .hub-hero h1{font-size:clamp(3.8rem,10vw,6.3rem)}
@@ -117,5 +148,9 @@
   .physics-modes{padding:0 1.25rem 3.5rem}
   .physics-mode{grid-template-columns:38px minmax(0,1fr) 24px;gap:.5rem;padding:1.6rem 0}
   .physics-mode h2{font-size:2rem}
+  .physics-topic-content{grid-template-columns:1fr;gap:1rem;padding-left:0}
+  .physics-concept-list{grid-template-columns:1fr}
+  .physics-test{grid-template-columns:38px minmax(0,1fr);gap:.5rem}
+  .physics-test-number small{max-width:38px}
   .site-footer .footer-nav{font-size:.61rem}
 }
