@@ -2,15 +2,10 @@
   import { topics, glossary } from './data.js';
   import { quizPool } from './quiz.js';
   import { physicsConcepts, physicsQuizPool, physicsTopics } from './physics.js';
+  import Quiz from './Quiz.svelte';
 
-  const questionsPerRound = 20;
   const hubHref = window.location.pathname;
   const subjectHref = (subject) => `${hubHref}?subject=${encodeURIComponent(subject)}`;
-  const physicsModes = [
-    { id: 'physics-topics', number: '01', label: 'Tematy', note: `${physicsTopics.length} lekcji od budowy atomu po lasery` },
-    { id: 'physics-concepts', number: '02', label: 'Pojęcia', note: `${physicsConcepts.length} terminów i praw fizycznych` },
-    { id: 'physics-tests', number: '03', label: 'Testy', note: `${physicsQuizPool.length} pytań do samodzielnej powtórki` }
-  ];
 
   const timeline = [
     {year:'1945',label:'Koniec wojny · niepodległość ogłoszona w Indonezji',href:'#azja',world:true},
@@ -44,14 +39,6 @@
   let search = '';
   let filteredTopics = topics;
   let filteredGlossary = glossary;
-  let quizStarted = false;
-  let quizFinished = false;
-  let round = [];
-  let questionIndex = 0;
-  let selectedAnswer = null;
-  let score = 0;
-  let lastRoundSignature = '';
-  let answerStatus = '';
   function viewFromUrl() {
     const subject = new URLSearchParams(window.location.search).get('subject');
     return subject === 'history' || subject === 'physics' ? subject : 'hub';
@@ -94,51 +81,6 @@
     );
   }
 
-  function shuffle(items) {
-    const result = [...items];
-    for (let i = result.length - 1; i > 0; i -= 1) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [result[i], result[j]] = [result[j], result[i]];
-    }
-    return result;
-  }
-
-  const physicsTestQuestions = physicsQuizPool.map((question) => ({
-    ...question,
-    answers: shuffle([question.correct, ...question.wrong])
-  }));
-
-  function startRound() {
-    let nextRound;
-    let signature;
-    do {
-      const groups = [...new Set(quizPool.map((question) => question.group))];
-      const requiredQuestions = groups.map((group) => shuffle(quizPool.filter((question) => question.group === group))[0]);
-      const remainingQuestions = quizPool.filter((question) => !requiredQuestions.includes(question));
-      const selectedQuestions = shuffle([
-        ...requiredQuestions,
-        ...shuffle(remainingQuestions).slice(0, questionsPerRound - requiredQuestions.length)
-      ]);
-      nextRound = selectedQuestions.map((question) => ({...question, answers:shuffle([question.correct, ...question.wrong])}));
-      signature = nextRound.map((question) => `${question.id}:${question.answers.join('|')}`).join('~');
-    } while (signature === lastRoundSignature);
-    lastRoundSignature = signature;
-    round = nextRound;
-    questionIndex = 0;
-    selectedAnswer = null;
-    score = 0;
-    answerStatus = '';
-    quizStarted = true;
-    quizFinished = false;
-  }
-
-  function chooseAnswer(answer) {
-    if (selectedAnswer !== null || !round[questionIndex]) return;
-    selectedAnswer = answer;
-    answerStatus = answer === round[questionIndex].correct ? 'correct' : 'incorrect';
-    if (answerStatus === 'correct') score += 1;
-  }
-
   function handleShortcut(event) {
     if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
       event.preventDefault();
@@ -146,26 +88,14 @@
     }
   }
 
-  function nextQuestion() {
-    if (questionIndex === round.length - 1) {
-      quizFinished = true;
-      return;
-    }
-    questionIndex += 1;
-    selectedAnswer = null;
-    answerStatus = '';
-  }
-
-  $: currentQuestion = round[questionIndex];
-  $: progress = round.length ? ((questionIndex + (selectedAnswer !== null ? 1 : 0)) / round.length) * 100 : 0;
   $: displayedEventCount = filteredTopics.reduce((count, topic) => count + topic.events.length, 0);
 </script>
 
 <svelte:window onkeydown={handleShortcut} />
 
 <svelte:head>
-  <title>{currentView === 'history' ? 'Świat po II wojnie światowej — historia' : currentView === 'physics' ? 'Fizyka atomowa — dział nauki' : 'Ucz się po swojemu — katalog przedmiotów'}</title>
-  <meta name="description" content={currentView === 'history' ? 'Czytelne notatki, chronologia i losowany quiz ABC z historii świata po II wojnie światowej.' : 'Wybierz przedmiot i dział, aby uczyć się po swojemu.'} />
+  <title>{currentView === 'history' ? 'Świat po II wojnie światowej — historia' : currentView === 'physics' ? 'Fizyka atomowa i kwanty — notatki i quiz' : 'Ucz się po swojemu — katalog przedmiotów'}</title>
+  <meta name="description" content={currentView === 'history' ? 'Czytelne notatki, chronologia i losowany quiz ABC z historii świata po II wojnie światowej.' : currentView === 'physics' ? 'Notatki, wzory, słowniczek i losowany quiz ABC z fizyki atomowej i kwantów.' : 'Wybierz przedmiot i dział, aby uczyć się po swojemu.'} />
 </svelte:head>
 
 <a class="skip-link" href="#main">Przejdź do treści</a>
@@ -219,97 +149,91 @@
 </main>
 <footer class="site-footer"><span class="footer-mark" aria-hidden="true">U.</span><span>Atlas nauki <i>·</i> ucz się po swojemu</span><a href="#top">Wróć na górę ↑</a></footer>
 {:else if currentView === 'physics'}
-<header class="site-header department-header">
-  <a class="wordmark" href={hubHref} aria-label="Powrót do katalogu przedmiotów"><span class="mark">U.</span><span>ATLAS NAUKI <small>← KATALOG PRZEDMIOTÓW</small></span></a>
-  <nav aria-label="Nawigacja po dziale">{#each physicsModes as mode}<a href={`#${mode.id}`}>{mode.label}</a>{/each}</nav>
+<header class="site-header">
+  <a class="wordmark" href={hubHref} aria-label="Powrót do katalogu przedmiotów"><span class="mark">Φ.</span><span>FIZYKA <small>← KATALOG PRZEDMIOTÓW</small></span></a>
+  <nav aria-label="Nawigacja główna"><a href="#notatki">Notatki</a><a href="#pojecia">Pojęcia</a><a href="#test">Test</a><a href="#zrodla">Źródła</a></nav>
 </header>
-<main id="main" class="physics-main">
-  <section class="physics-hero" id="top" aria-labelledby="physics-title">
-    <a class="back-link" href={hubHref}><span aria-hidden="true">←</span> Powrót do katalogu przedmiotów</a>
-    <p class="eyebrow"><span class="eyebrow-line"></span> FIZYKA <span class="crumb-divider">/</span> DZIAŁ 01</p>
-    <h1 id="physics-title">Fizyka atomowa <br />i kwanty <em>promieniowania <br />elektromagnetycznego.</em></h1>
-    <p class="hub-deck">Przejdź od budowy jądra do fotonów, widm i laserów. W każdym temacie znajdziesz wyjaśnienia, wzory i przykłady.</p>
-    <nav class="mode-index" aria-label="Tryby nauki w dziale">
-      {#each physicsModes as mode}<a href={`#${mode.id}`}><span>{mode.number}</span><b>{mode.label}</b><small>{mode.note}</small><i aria-hidden="true">↓</i></a>{/each}
-    </nav>
+<main id="main">
+  <section class="hero" id="top" aria-labelledby="physics-title">
+    <div class="hero-copy">
+      <p class="eyebrow"><span class="eyebrow-line"></span> POWTÓRKA · FIZYKA ATOMOWA</p>
+      <h1 id="physics-title">Świat<br /><em>atomów</em><br />i kwantów</h1>
+      <p class="hero-deck">Od budowy jądra po fotony i lasery — połącz prawa, wzory i doświadczenia, które opisują świat w najmniejszej skali.</p>
+      <a class="text-link" href="#sciezka">Zobacz ścieżkę nauki <span aria-hidden="true">↓</span></a>
+    </div>
+    <aside class="hero-aside" aria-label="Tematy działu fizyki atomowej">
+      <div class="hero-years"><span>ATOM</span><i></i><span>LASER</span></div>
+      <p class="aside-caption">Siedem tematów,<br />jeden wspólny język</p>
+      <ol class="process-list"><li><span>01</span><div><b>Składniki</b><small>jądro, izotopy i atom</small></div></li><li><span>02</span><div><b>Promieniowanie</b><small>fale, fotony i widma</small></div></li><li><span>03</span><div><b>Oddziaływania</b><small>materia, światło i lasery</small></div></li></ol>
+      <p class="aside-note">Zacznij od modelu, sprawdź zależności we wzorach, a potem zobacz, jak łączą się w doświadczeniach.</p>
+    </aside>
   </section>
-  <section class="physics-modes" aria-label="Materiały do nauki">
-    <article class="physics-mode physics-topics-mode" id="physics-topics" aria-labelledby="physics-topics-title">
-      <span class="mode-number">{physicsModes[0].number}</span>
-      <div>
-        <p class="eyebrow">01 · TEMATY</p>
-        <h2 id="physics-topics-title">Od jądra do lasera.</h2>
-        <p class="physics-intro">Siedem krótkich lekcji prowadzi przez doświadczenia, prawa i modele opisujące atom oraz promieniowanie.</p>
-        <div class="physics-topic-list">
-          {#each physicsTopics as topic}
-            <details class="physics-topic" id={topic.id} open={topic.number === '01'}>
-              <summary>
-                <span class="physics-topic-number">{topic.number}</span>
-                <span class="physics-topic-heading"><strong>{topic.title}</strong><small>{topic.intro}</small></span>
-                <span class="expand-mark" aria-hidden="true">+</span>
-              </summary>
-              <div class="physics-topic-content">
-                {#each topic.sections as section}
-                  <article class="physics-subtopic">
-                    <h3>{section.heading}</h3>
-                    <p>{section.text}</p>
-                    {#if section.formula}<p class="physics-formula"><code>{section.formula}</code></p>{/if}
-                  </article>
-                {/each}
-              </div>
-            </details>
-          {/each}
-        </div>
-      </div>
-      <span class="physics-mode-mark" aria-hidden="true">01</span>
-    </article>
-    <article class="physics-mode physics-concepts-mode" id="physics-concepts" aria-labelledby="physics-concepts-title">
-      <span class="mode-number">{physicsModes[1].number}</span>
-      <div>
-        <p class="eyebrow">02 · POJĘCIA</p>
-        <h2 id="physics-concepts-title">Słownik do powtórki.</h2>
-        <p class="physics-intro">Najważniejsze wielkości, zjawiska i modele z działu atomowego.</p>
-        <dl class="physics-concept-list">
-          {#each physicsConcepts as [term, definition], i}
-            <div class="physics-concept">
-              <dt><span>{String(i + 1).padStart(2, '0')}</span>{term}</dt>
-              <dd>{definition}</dd>
+  <section class="timeline-section physics-path" id="sciezka" aria-labelledby="path-title">
+    <div class="section-heading timeline-heading"><div><p class="eyebrow"><span class="section-no">A</span> ŚCIEŻKA NAUKI</p><h2 id="path-title">Od jądra.<br /><em>Do światła.</em></h2></div><p class="section-intro">Przejdź przez siedem powiązanych tematów. Każdy punkt prowadzi bezpośrednio do notatek i wzorów.</p></div>
+    <div class="timeline-legend"><span><i class="dot"></i> Kolejność tematów</span><span class="scroll-hint">Wybierz temat <span aria-hidden="true">→</span></span></div>
+    <div class="timeline-scroll" role="region" aria-label="Ścieżka nauki: siedem tematów fizyki atomowej">
+      <ol class="timeline-track physics-path-track">
+        {#each physicsTopics as topic}
+          <li><a href={`#${topic.id}`} aria-label={`${topic.number}: ${topic.title}`}><span class="timeline-year">{topic.number}</span><span class="timeline-node" aria-hidden="true"></span><span class="timeline-label">{topic.title}</span></a></li>
+        {/each}
+      </ol>
+    </div>
+    <p class="timeline-caption"><span>01</span> SKŁADNIKI ATOMU <span class="caption-rule"></span> <span>07</span> EMISJA WYMUSZONA</p>
+  </section>
+  <section class="notes-section" id="notatki" aria-labelledby="physics-notes-title">
+    <div class="section-heading notes-heading">
+      <div><p class="eyebrow"><span class="section-no">B</span> NOTATKI TEMATYCZNE</p><h2 id="physics-notes-title">Odkrywaj.<br /><em>Rozumiej.</em></h2></div>
+      <p class="section-intro">Siedem lekcji prowadzi od składu atomu przez naturę światła i materii aż po emisję laserową. Rozwiń temat, by przeczytać objaśnienia i powtórzyć wzory.</p>
+    </div>
+    <div class="notes-layout">
+      <aside class="notes-index" aria-label="Tematy notatek z fizyki">
+        <span class="index-label">W TYM ROZDZIALE</span>
+        {#each physicsTopics as topic}<a href={`#${topic.id}`}><span>{topic.number}</span>{topic.title}</a>{/each}
+        <div class="index-rule"></div><p>Łącz <strong>model</strong>, wzór i wynik doświadczenia.</p>
+      </aside>
+      <div class="topic-list">
+        {#each physicsTopics as topic}
+          <details class="topic" id={topic.id} open={topic.number === '01'}>
+            <summary><span class="topic-number">{topic.number}</span><span class="topic-title-wrap"><span class="topic-tag">FIZYKA ATOMOWA</span><span class="topic-title">{topic.title}</span><span class="topic-intro">{topic.intro}</span></span><span class="expand-mark" aria-hidden="true">+</span></summary>
+            <div class="topic-events">
+              {#each topic.sections as section, i}
+                <article class="event physics-event">
+                  <div class="event-date">{topic.number}.{String(i + 1).padStart(2, '0')}</div>
+                  <div class="event-body"><h3>{section.heading}</h3><p>{section.text}</p>{#if section.formula}<p class="physics-formula"><code>{section.formula}</code></p>{/if}</div>
+                </article>
+              {/each}
             </div>
-          {/each}
-        </dl>
+          </details>
+        {/each}
       </div>
-      <span class="physics-mode-mark" aria-hidden="true">02</span>
-    </article>
-    <article class="physics-mode physics-tests-mode" id="physics-tests" aria-labelledby="physics-tests-title">
-      <span class="mode-number">{physicsModes[2].number}</span>
-      <div>
-        <p class="eyebrow">03 · TESTY</p>
-        <h2 id="physics-tests-title">Sprawdź, co pamiętasz.</h2>
-        <p class="physics-intro">Najpierw wybierz odpowiedź, potem rozwiń klucz. Pytania obejmują cały dział.</p>
-        <ol class="physics-test-list">
-          {#each physicsTestQuestions as question, i}
-            <li class="physics-test">
-              <span class="physics-test-number">{String(i + 1).padStart(2, '0')} <small>{question.group}</small></span>
-              <div class="physics-test-body">
-                <h3>{question.prompt}</h3>
-                <ol class="physics-answer-list" type="A">
-                  {#each question.answers as answer}<li>{answer}</li>{/each}
-                </ol>
-                <details class="physics-answer-key">
-                  <summary>Pokaż odpowiedź i wyjaśnienie</summary>
-                  <p><strong>{question.correct}</strong></p>
-                  <p>{question.why}</p>
-                </details>
-              </div>
-            </li>
-          {/each}
-        </ol>
-      </div>
-      <span class="physics-mode-mark" aria-hidden="true">03</span>
-    </article>
+    </div>
+  </section>
+  <section class="glossary-section" id="pojecia" aria-labelledby="physics-glossary-title">
+    <div class="glossary-side"><p class="eyebrow"><span class="section-no">C</span> SŁOWNICZEK</p><h2 id="physics-glossary-title">Pojęcia,<br /><em>które warto<br />znać.</em></h2><p>Wielkości, prawa i zjawiska, do których wracają notatki z całego działu.</p><span class="glossary-count">{physicsConcepts.length.toString().padStart(2, '0')} HASŁA</span></div>
+    <dl class="glossary-list">{#each physicsConcepts as [term, definition], i}<div class="glossary-entry"><dt><span>{String(i + 1).padStart(2, '0')}</span>{term}</dt><dd>{definition}</dd></div>{/each}</dl>
+  </section>
+  <section class="quiz-section" id="test" aria-labelledby="physics-quiz-title">
+    <div class="quiz-intro">
+      <p class="eyebrow"><span class="section-no">D</span> SPRAWDŹ SIĘ</p>
+      <h2 id="physics-quiz-title">Sprawdź,<br /><em>co pamiętasz.</em></h2>
+      <p>W każdej rundzie odpowiadasz na 10 losowych pytań z całego działu. Po każdej odpowiedzi od razu poznajesz wynik i wyjaśnienie.</p>
+      <a class="text-link" href="#notatki">Wróć do notatek <span aria-hidden="true">↑</span></a>
+    </div>
+    <Quiz pool={physicsQuizPool} roundSize={10} />
+  </section>
+  <section class="sources-section" id="zrodla" aria-labelledby="physics-sources-title">
+    <div class="sources-heading"><p class="eyebrow"><span class="section-no">E</span> DO DALSZEJ LEKTURY</p><h2 id="physics-sources-title">Źródła<br /><em>i kontekst.</em></h2></div>
+    <div class="sources-copy">
+      <p class="source-note"><span>01</span><b>Materiały do powtórki</b><br />Punktem wyjścia są dostarczone materiały do działu: siedem lekcji o budowie atomu, promieniowaniu termicznym, fotonach, fotoefekcie, falach materii, widmach i laserach oraz zestaw pytań kontrolnych. Notatki i wyjaśnienia są autorskim opracowaniem; wzory zapisano skrótowo, bez przepisywania fragmentów podręcznika.</p>
+      <p class="source-note"><span>02</span><b>Stałe i dalsza lektura</b><br />Wartości stałych fizycznych podano w przybliżeniu. Dokładne wartości i dodatkowe wyjaśnienia znajdziesz w poniższych źródłach.</p>
+      <ul class="source-links">
+        <li><a href="https://physics.nist.gov/cuu/Constants/index.html" target="_blank" rel="noopener noreferrer">NIST — wartości stałych fizycznych <span aria-hidden="true">↗</span></a></li>
+        <li><a href="https://openstax.org/details/books/university-physics-volume-3" target="_blank" rel="noopener noreferrer">OpenStax — University Physics, tom 3 <span aria-hidden="true">↗</span></a></li>
+      </ul>
+    </div>
   </section>
 </main>
-<footer class="site-footer"><span class="footer-mark" aria-hidden="true">U.</span><span>Fizyka <i>·</i> dział 01</span><a class="footer-nav" href={hubHref}>Powrót do katalogu ↑</a></footer>
+<footer class="site-footer"><a class="footer-mark" href="#top" aria-label="Wróć na górę">Φ.</a><span>Fizyka atomowa <i>·</i> powtórka</span><a href="#top">Wróć na górę ↑</a></footer>
 {:else}
 <header class="site-header">
   <a class="wordmark" href={hubHref} aria-label="Powrót do katalogu przedmiotów"><span class="mark">H.</span><span>HISTORIA <small>← KATALOG PRZEDMIOTÓW</small></span></a>
@@ -337,50 +261,10 @@
     <div class="quiz-intro">
       <p class="eyebrow"><span class="section-no">D</span> SPRAWDŹ SIĘ</p>
       <h2 id="quiz-title">Sprawdź,<br /><em>co pamiętasz.</em></h2>
-      <p>W każdej rundzie odpowiadasz na {questionsPerRound} losowych pytań z całego rozdziału. Po każdej odpowiedzi od razu poznajesz wynik.</p>
+      <p>W każdej rundzie odpowiadasz na 20 losowych pytań z całego rozdziału. Po każdej odpowiedzi od razu poznajesz wynik.</p>
       <a class="text-link" href="#notatki">Wróć do notatek <span aria-hidden="true">↑</span></a>
     </div>
-    <div class="quiz-panel" aria-live="polite">
-      {#if !quizStarted}
-        <div class="quiz-welcome">
-          <span class="quiz-label">QUIZ ABC · {questionsPerRound} PYTAŃ</span>
-          <div class="quiz-big-number">{questionsPerRound}<span>×</span></div>
-          <p>Pytania są losowane z puli {quizPool.length}, nie powtarzają się, a każda runda obejmuje wszystkie działy.</p>
-          <button class="primary-button" onclick={startRound}>Rozpocznij test <span aria-hidden="true">→</span></button>
-        </div>
-      {:else if quizFinished}
-        <div class="quiz-finish">
-          <span class="quiz-label">KONIEC RUNDY</span>
-          <div class="score-mark">{score}<span>/ {questionsPerRound}</span></div>
-          <h3>{score >= questionsPerRound * 0.8 ? 'Świetna robota.' : score >= questionsPerRound * 0.5 ? 'Dobry kierunek.' : 'Warto wrócić do notatek.'}</h3>
-          <p>{score >= questionsPerRound * 0.8 ? 'Dobrze łączysz fakty z ich kontekstem.' : 'Każda pomyłka to dobry trop do powtórki — pytania pochodzą ze wszystkich tematów.'}</p>
-          <button class="primary-button" onclick={startRound}>Losuj nową rundę <span aria-hidden="true">↻</span></button>
-        </div>
-      {:else if currentQuestion}
-        <div class="quiz-topline">
-          <span class="quiz-label">PYTANIE {String(questionIndex + 1).padStart(2,'0')} <span>/ {questionsPerRound}</span></span>
-          <span class="quiz-category">{currentQuestion.group}</span>
-        </div>
-        <div class="quiz-progress" role="progressbar" aria-label="Postęp quizu" aria-valuemin="0" aria-valuemax={questionsPerRound} aria-valuenow={questionIndex + (selectedAnswer !== null ? 1 : 0)}>
-          <span style={`width:${progress}%`}></span>
-        </div>
-        <h3 class="question-title">{currentQuestion.prompt}</h3>
-        <div class="answer-list" aria-label="Wybierz jedną odpowiedź">
-          {#each currentQuestion.answers as answer, i}
-            <button class="answer-option" class:selected={selectedAnswer === answer} class:answer-correct={selectedAnswer !== null && answer === currentQuestion.correct} class:answer-wrong={selectedAnswer === answer && answer !== currentQuestion.correct} onclick={() => chooseAnswer(answer)} disabled={selectedAnswer !== null} aria-pressed={selectedAnswer === answer}>
-              <span class="answer-letter">{String.fromCharCode(65 + i)}</span><span>{answer}</span>
-              <span class="answer-check" aria-hidden="true">{selectedAnswer !== null && answer === currentQuestion.correct ? '✓' : selectedAnswer === answer ? '×' : ''}</span>
-            </button>
-          {/each}
-        </div>
-        {#if selectedAnswer !== null}
-          <div class="answer-feedback" class:feedback-correct={answerStatus === 'correct'} class:feedback-wrong={answerStatus === 'incorrect'} role="status">
-            <strong>{answerStatus === 'correct' ? 'Dobrze!' : 'Jeszcze nie.'}</strong><p>{currentQuestion.why}</p>
-          </div>
-          <button class="primary-button next-button" onclick={nextQuestion}>{questionIndex === round.length - 1 ? 'Zobacz wynik' : 'Następne pytanie'} <span aria-hidden="true">→</span></button>
-        {/if}
-      {/if}
-    </div>
+    <Quiz pool={quizPool} roundSize={20} />
   </section>
   <section class="sources-section" id="zrodla" aria-labelledby="sources-title"><div class="sources-heading"><p class="eyebrow"><span class="section-no">E</span> DO DALSZEJ LEKTURY</p><h2 id="sources-title">Źródła<br /><em>i kontekst.</em></h2></div><div class="sources-copy"><p class="source-note"><span>01</span><b>Punkt wyjścia</b><br />Zakres tematów i podstawowe hasła pochodzą z podręcznikowych stron 48–49 oraz karty powtórzeniowej (s. 21–22) dostarczonych do zadania. Notatki porządkują materiał i uzupełniają go o kontekst — nie zastępują podręcznika.</p><p class="source-note"><span>02</span><b>Weryfikacja faktów</b><br />Daty i niuanse dotyczące polityki powojennej, dekolonizacji, wojen i misji kosmicznych sprawdzaj w poniższych materiałach historycznych i instytucjonalnych.</p><ul class="source-links">
     <li><a href="https://history.state.gov/milestones/1945-1952/truman-doctrine" target="_blank" rel="noopener noreferrer">U.S. Office of the Historian — doktryna Trumana <span aria-hidden="true">↗</span></a></li>

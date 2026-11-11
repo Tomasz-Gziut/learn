@@ -209,3 +209,9 @@
     background:var(--paper);
   }
 }
+
+.physics-path-track{min-width:1050px;grid-auto-columns:minmax(135px,1fr)}
+.physics-event p{margin:0;color:#4d5663;font-size:.75rem;line-height:1.68}
+.physics-event .physics-formula{margin-top:.65rem}
+.physics-formula code{display:inline-block;max-width:100%;padding:.45rem .6rem;border-left:2px solid var(--ochre);background:#eee9de;color:#263d62;font:.7rem/1.65 "Segoe UI",sans-serif;overflow-wrap:anywhere}
+@media(max-width:600px){.physics-path-track{min-width:1050px}}
